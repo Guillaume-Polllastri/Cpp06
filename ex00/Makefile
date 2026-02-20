@@ -6,13 +6,14 @@
 #    By: gpollast <gpollast@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/18 11:36:06 by gpollast          #+#    #+#              #
-#    Updated: 2026/02/16 14:32:57 by gpollast         ###   ########.fr        #
+#    Updated: 2026/02/19 11:21:35 by gpollast         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ScalarTypes
 
 SRCS =	srcs/main.cpp \
+		srcs/ScalarConverter.cpp
 
 C++ = c++
 C++_FLAGS = -Wall -Wextra -Werror -std=c++98 -I./includes -g
