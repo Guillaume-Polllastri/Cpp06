@@ -6,7 +6,7 @@
 /*   By: gpollast <gpollast@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 10:06:51 by gpollast          #+#    #+#             */
-/*   Updated: 2026/02/23 11:04:33 by gpollast         ###   ########.fr       */
+/*   Updated: 2026/02/23 13:28:44 by gpollast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <iomanip>
 #include <climits>
 #include <cfloat>
+#include <cerrno>
 
 /* ************************************************************************** */
 
@@ -52,24 +53,52 @@ static void	printChar(char c)
 
 static void	printInt(const std::string& str)
 {
-	long value = std::strtol(str.c_str(), NULL, 10);
-	if (value < INT_MIN || value > INT_MAX)
+	char	*endptr;
+	double	doubleValue = std::strtod(str.c_str(), &endptr);
+
+	if (errno == ERANGE || *endptr != '\0')
 	{
-		std::cout << "char: Impossible" << std::endl;
-		std::cout << "int: Impossible" << std::endl;
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: impossible" << std::endl;
+		std::cout << "double: impossible" << std::endl;
+		return ;
 	}
-	else if (value < 32 || value > 126)
+
+	if (doubleValue < FLT_MIN || doubleValue > FLT_MAX)
 	{
-		std::cout << "char: Non Displayable" << std::endl;
-		std::cout << "int: " << static_cast<int>(value) << std::endl;
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: impossible" << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << doubleValue << std::endl;
+		return ;
+	}
+
+	if (doubleValue < INT_MIN || doubleValue > INT_MAX)
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(doubleValue) << 'f' << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << doubleValue << std::endl;
+		return ;
+	}
+
+	int intValue = static_cast<int>(doubleValue);
+	
+	if (intValue < 32 || intValue > 126)
+	{
+		std::cout << "char: Non displayable" << std::endl;
+		std::cout << "int: " << intValue << std::endl;
+		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(intValue) << 'f' << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(intValue) << std::endl;
 	}
 	else
 	{
-		std::cout << "char: \'" << static_cast<char>(value) << "\'"  << std::endl;
-		std::cout << "int: " << static_cast<int>(value) << std::endl;
+		std::cout << "char: \'" << static_cast<char>(intValue) << "\'"  << std::endl;
+		std::cout << "int: " << static_cast<int>(intValue) << std::endl;
+		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(intValue) << 'f' << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(intValue) << std::endl;
 	}
-	std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(value) << 'f' << std::endl;
-	std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(value) << std::endl;
 }
 
 static void	printDouble(const std::string& str)
