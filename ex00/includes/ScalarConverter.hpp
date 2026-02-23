@@ -6,7 +6,7 @@
 /*   By: gpollast <gpollast@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 14:34:15 by gpollast          #+#    #+#             */
-/*   Updated: 2026/02/22 20:24:36 by gpollast         ###   ########.fr       */
+/*   Updated: 2026/02/23 11:04:01 by gpollast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,13 @@
 
 #include <string>
 
-#define INT_MAX 2147483647
-#define INT_MIN -2147483648
-
 enum	e_type
 {
 	CHAR,
 	INT,
 	FLOAT,
 	DOUBLE,
-	IMPOSSIBLE
+	NOTHING
 };
 
 class ScalarConverter
@@ -37,3 +34,5 @@ class ScalarConverter
 	public:
 		static void	convert(const std::string& str);
 };
+
+e_type	getType(const std::string& str);

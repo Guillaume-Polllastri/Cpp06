@@ -6,7 +6,7 @@
 /*   By: gpollast <gpollast@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 10:06:51 by gpollast          #+#    #+#             */
-/*   Updated: 2026/02/22 20:29:13 by gpollast         ###   ########.fr       */
+/*   Updated: 2026/02/23 11:04:33 by gpollast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <iomanip>
+#include <climits>
+#include <cfloat>
 
 /* ************************************************************************** */
 
@@ -37,37 +39,6 @@ ScalarConverter::~ScalarConverter() {}
 
 // Method
 
-static bool	isChar(const std::string& str)
-{
-	if (str.length() == 1)
-		return (true);
-	if (str.length() == 3)
-	{
-		if (str[0] == '\'' && str[2] == '\'')
-			return (true);
-	}
-	return (false);
-}
-
-static bool	isInt(const std::string& str)
-{
-	for (int i = 0; i < static_cast<int>(str.length()); i++)
-	{
-		if (!std::isdigit(str[i]))
-			return (false);
-	}
-	return (true);
-}
-
-static e_type	getType(const std::string& str)
-{
-	if (isChar(str))
-		return (CHAR);
-	if (isInt(str))
-		return (INT);
-	return (IMPOSSIBLE);
-}
-
 static void	printChar(char c)
 {
 	if (c < 32 || c > 126)
@@ -82,12 +53,15 @@ static void	printChar(char c)
 static void	printInt(const std::string& str)
 {
 	long value = std::strtol(str.c_str(), NULL, 10);
-	if (value < 32 || value > 126)
-		std::cout << "char: Non Displayable" << std::endl;
-	else if (value < INT_MIN || value > INT_MAX)
+	if (value < INT_MIN || value > INT_MAX)
 	{
 		std::cout << "char: Impossible" << std::endl;
 		std::cout << "int: Impossible" << std::endl;
+	}
+	else if (value < 32 || value > 126)
+	{
+		std::cout << "char: Non Displayable" << std::endl;
+		std::cout << "int: " << static_cast<int>(value) << std::endl;
 	}
 	else
 	{
@@ -96,6 +70,18 @@ static void	printInt(const std::string& str)
 	}
 	std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(value) << 'f' << std::endl;
 	std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(value) << std::endl;
+}
+
+static void	printDouble(const std::string& str)
+{
+	(void)str;
+	std::cout << "DOUBLE\n";
+}
+
+static void	printFloat(const std::string& str)
+{
+	(void)str;
+	std::cout << "FLOAT\n";
 }
 
 void	ScalarConverter::convert(const std::string& str)
@@ -118,10 +104,16 @@ void	ScalarConverter::convert(const std::string& str)
 			break;
 		}
 		case FLOAT:
+		{
+			printFloat(str);
 			break;
+		}
 		case DOUBLE:
+		{
+			printDouble(str);
 			break;
-		case IMPOSSIBLE:
+		}
+		case NOTHING:
 			break;
 	}
 }
