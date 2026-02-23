@@ -6,7 +6,7 @@
 /*   By: gpollast <gpollast@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 10:06:51 by gpollast          #+#    #+#             */
-/*   Updated: 2026/02/23 13:28:44 by gpollast         ###   ########.fr       */
+/*   Updated: 2026/02/23 14:10:53 by gpollast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,73 @@ ScalarConverter::~ScalarConverter() {}
 
 // Method
 
+// Check_limits
+
+static bool	check_overflow(const std::string& str)
+{
+	char	*endptr;
+	double	doubleValue = std::strtod(str.c_str(), &endptr);
+
+	if (errno == ERANGE || *endptr != '\0')
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: impossible" << std::endl;
+		std::cout << "double: impossible" << std::endl;
+		return true;
+	}
+
+	if (doubleValue < FLT_MIN || doubleValue > FLT_MAX)
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: impossible" << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << doubleValue << std::endl;
+		return true;
+	}
+
+	if (doubleValue < INT_MIN || doubleValue > INT_MAX)
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(doubleValue) << 'f' << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << doubleValue << std::endl;
+		return true;
+	}
+	return false;
+}
+
+static bool	check_special(const std::string& str)
+{
+	if (str == "nan" || str == "nanf")
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: nanf" << std::endl;
+		std::cout << "double: nan" << std::endl;
+		return true;
+	}
+	if (str == "-inf" || str == "-inff")
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: -inff" << std::endl;
+		std::cout << "double: -inf" << std::endl;
+		return true;
+	}
+	if (str == "+inf" || str == "+inff")
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: +inff" << std::endl;
+		std::cout << "double: +inf" << std::endl;
+		return true;
+	}
+	return false;
+}
+
+// Print Types
+
 static void	printChar(char c)
 {
 	if (c < 32 || c > 126)
@@ -53,37 +120,10 @@ static void	printChar(char c)
 
 static void	printInt(const std::string& str)
 {
-	char	*endptr;
-	double	doubleValue = std::strtod(str.c_str(), &endptr);
-
-	if (errno == ERANGE || *endptr != '\0')
-	{
-		std::cout << "char: impossible" << std::endl;
-		std::cout << "int: impossible" << std::endl;
-		std::cout << "float: impossible" << std::endl;
-		std::cout << "double: impossible" << std::endl;
+	if (check_overflow(str))
 		return ;
-	}
-
-	if (doubleValue < FLT_MIN || doubleValue > FLT_MAX)
-	{
-		std::cout << "char: impossible" << std::endl;
-		std::cout << "int: impossible" << std::endl;
-		std::cout << "float: impossible" << std::endl;
-		std::cout << "double: " << std::fixed << std::setprecision(1) << doubleValue << std::endl;
-		return ;
-	}
-
-	if (doubleValue < INT_MIN || doubleValue > INT_MAX)
-	{
-		std::cout << "char: impossible" << std::endl;
-		std::cout << "int: impossible" << std::endl;
-		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(doubleValue) << 'f' << std::endl;
-		std::cout << "double: " << std::fixed << std::setprecision(1) << doubleValue << std::endl;
-		return ;
-	}
-
-	int intValue = static_cast<int>(doubleValue);
+	
+	int intValue = std::atoi(str.c_str());
 	
 	if (intValue < 32 || intValue > 126)
 	{
@@ -95,7 +135,7 @@ static void	printInt(const std::string& str)
 	else
 	{
 		std::cout << "char: \'" << static_cast<char>(intValue) << "\'"  << std::endl;
-		std::cout << "int: " << static_cast<int>(intValue) << std::endl;
+		std::cout << "int: " << intValue << std::endl;
 		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(intValue) << 'f' << std::endl;
 		std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(intValue) << std::endl;
 	}
@@ -103,14 +143,50 @@ static void	printInt(const std::string& str)
 
 static void	printDouble(const std::string& str)
 {
-	(void)str;
-	std::cout << "DOUBLE\n";
+	if (check_special(str))
+		return ;
+	if (check_overflow(str))
+		return ;
+	double doubleValue = std::strtod(str.c_str(), NULL);
+	
+	if (doubleValue < 32 || doubleValue > 126)
+	{
+		std::cout << "char: Non displayable" << std::endl;
+		std::cout << "int: " << static_cast<int>(doubleValue) << std::endl;
+		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(doubleValue) << 'f' << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << doubleValue << std::endl;
+	}
+	else
+	{
+		std::cout << "char: \'" << static_cast<char>(doubleValue) << "\'"  << std::endl;
+		std::cout << "int: " << static_cast<int>(doubleValue) << std::endl;
+		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(doubleValue) << 'f' << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << doubleValue << std::endl;
+	}
 }
 
 static void	printFloat(const std::string& str)
 {
-	(void)str;
-	std::cout << "FLOAT\n";
+	if (check_special(str))
+		return ;
+	if (check_overflow(str))
+		return ;
+	float floatValue = std::strtof(str.c_str(), NULL);
+	
+	if (floatValue < 32 || floatValue > 126)
+	{
+		std::cout << "char: Non displayable" << std::endl;
+		std::cout << "int: " << static_cast<int>(floatValue) << std::endl;
+		std::cout << "float: " << std::fixed << std::setprecision(1) << floatValue << 'f' << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(floatValue) << std::endl;
+	}
+	else
+	{
+		std::cout << "char: \'" << static_cast<char>(floatValue) << "\'"  << std::endl;
+		std::cout << "int: " << static_cast<int>(floatValue) << std::endl;
+		std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(floatValue) << 'f' << std::endl;
+		std::cout << "double: " << std::fixed << std::setprecision(1) << static_cast<double>(floatValue) << std::endl;
+	}
 }
 
 void	ScalarConverter::convert(const std::string& str)
@@ -134,7 +210,8 @@ void	ScalarConverter::convert(const std::string& str)
 		}
 		case FLOAT:
 		{
-			printFloat(str);
+			std::string str2 = str.substr(0, static_cast<int>(str.length()) - 1);
+			printFloat(str2);
 			break;
 		}
 		case DOUBLE:
