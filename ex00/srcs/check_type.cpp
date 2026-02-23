@@ -6,7 +6,7 @@
 /*   By: gpollast <gpollast@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 11:01:28 by gpollast          #+#    #+#             */
-/*   Updated: 2026/02/23 14:04:09 by gpollast         ###   ########.fr       */
+/*   Updated: 2026/02/23 14:39:02 by gpollast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static bool	isChar(const std::string& str)
 {
-	if (str.length() == 1)
+	if (str.length() == 1 && !isdigit(str[0]))
 		return (true);
 	if (str.length() == 3)
 	{
@@ -50,7 +50,7 @@ static bool	isDouble(const std::string& str)
 		return (false);
 	while (i < static_cast<int>(str.length()))
 	{
-		if (!std::isdigit(str[i]) && count == 1)
+		if (!std::isdigit(str[i]) && str[i] != '.')
 			return (false);
 		if (str[i] == '.')
 			count++;

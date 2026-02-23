@@ -6,7 +6,7 @@
 /*   By: gpollast <gpollast@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 10:06:51 by gpollast          #+#    #+#             */
-/*   Updated: 2026/02/23 14:10:53 by gpollast         ###   ########.fr       */
+/*   Updated: 2026/02/23 14:44:38 by gpollast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static bool	check_overflow(const std::string& str)
 		return true;
 	}
 
-	if (doubleValue < FLT_MIN || doubleValue > FLT_MAX)
+	if (doubleValue < -FLT_MAX || doubleValue > FLT_MAX)
 	{
 		std::cout << "char: impossible" << std::endl;
 		std::cout << "int: impossible" << std::endl;
@@ -110,7 +110,7 @@ static bool	check_special(const std::string& str)
 static void	printChar(char c)
 {
 	if (c < 32 || c > 126)
-		std::cout << "char: Non Displayable" << std::endl;
+		std::cout << "char: Non displayable" << std::endl;
 	else
 		std::cout << "char: \'" << c << "\'"  << std::endl;
 	std::cout << "int: " << static_cast<int>(c) << std::endl;
@@ -191,6 +191,15 @@ static void	printFloat(const std::string& str)
 
 void	ScalarConverter::convert(const std::string& str)
 {
+    if (str.empty())
+    {
+        std::cout << "char: impossible" << std::endl;
+        std::cout << "int: impossible" << std::endl;
+        std::cout << "float: impossible" << std::endl;
+        std::cout << "double: impossible" << std::endl;
+        return;
+    }
+	
 	e_type	type = getType(str);
 
 	switch (type)
@@ -220,7 +229,10 @@ void	ScalarConverter::convert(const std::string& str)
 			break;
 		}
 		case NOTHING:
+		{
+			std::cout << "Error: unknown type" << std::endl;
 			break;
+		}
 	}
 }
 
