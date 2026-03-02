@@ -6,7 +6,7 @@
 /*   By: gpollast <gpollast@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 17:21:59 by gpollast          #+#    #+#             */
-/*   Updated: 2026/02/23 17:35:44 by gpollast         ###   ########.fr       */
+/*   Updated: 2026/03/02 18:14:51 by gpollast         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,15 @@ int	main(void)
 	uintptr_t	raw;
 
 	data.value = 42;
+	std::cout << "data adress = " << &data << std::endl;
+	std::cout << "data value = " << data.value << std::endl << std::endl;
 	raw = Serializer::serialize(&data);
-
+	std::cout << "(raw) data adress = " << raw << std::endl << std::endl;
+	
 	Data	*ptr;
 
 	ptr = Serializer::deserialize(raw);
-	std::cout << "data value = " << data.value << std::endl;
+	std::cout << "ptr adress = " << ptr << std::endl;
 	std::cout << "ptr value = " << ptr->value << std::endl;
 	if (ptr == &data)
 		std::cout << "Same adress !" << std::endl;
